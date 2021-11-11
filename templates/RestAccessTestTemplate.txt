@@ -1,0 +1,76 @@
+package ru.tbrumble.testmaker;
+
+import org.hamcrest.MatcherAssert;
+import org.hamcrest.Matchers;
+import org.junit.jupiter.api.AfterEach;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.boot.test.web.client.TestRestTemplate;
+import org.springframework.boot.web.server.LocalServerPort;
+import org.springframework.http.*;
+import ru.tbrumble.testmaker.model.entity.SwitchEntity;
+import ru.tbrumble.testmaker.repo.SwitchRepo;
+import ru.tbrumble.testmaker.model.web.WebUser;
+
+import static org.hamcrest.MatcherAssert.assertThat;
+import static org.hamcrest.Matchers.equalTo;
+import static org.hamcrest.Matchers.notNullValue;
+
+@SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
+public class ${testName} {
+    private final static String URL_CONST = "http://localhost:%s/%s";
+
+    private String urlRestPath = "${restPath}";
+    private String switchName = "${switchName}";
+
+    @Autowired
+    private TestRestTemplate restTemplate;
+
+    @LocalServerPort
+    private int port;
+
+    @Autowired
+    SwitchRepo switchRepo;
+
+
+    @BeforeEach
+    public void beforeTest() {
+        switchRepo.deleteAll();
+    }
+
+    @AfterEach
+    public void AfterTest() {
+        switchRepo.deleteAll();
+    }
+
+
+    @Test
+    public void testRestWithAccess() {
+        switchRepo.save(new SwitchEntity()
+                .setSwitchName(switchName)
+                .setValue(Boolean.TRUE)
+        );
+
+        String url = String.format(URL_CONST, port, urlRestPath);
+        ResponseEntity<WebUser[]> response = restTemplate.getForEntity(
+                url, WebUser[].class);
+        MatcherAssert.assertThat("testRestWithAccess. get response", response, Matchers.notNullValue());
+        MatcherAssert.assertThat("testRestWithAccess. response code", response.getStatusCode(), Matchers.equalTo(HttpStatus.OK));
+    }
+
+    public void testRestWithoutAccess() {
+      switchRepo.save(new SwitchEntity()
+              .setSwitchName(switchName)
+              .setValue(Boolean.FALSE)
+      );
+
+      String url = String.format(URL_CONST, port, urlRestPath);
+      ResponseEntity<String> response = restTemplate.getForEntity(
+              url, String.class);
+
+      MatcherAssert.assertThat("testRestWithAccess. get response", response, Matchers.notNullValue());
+      MatcherAssert.assertThat("testRestWithAccess. response code", response.getStatusCode(), Matchers.equalTo(HttpStatus.NOT_FOUND));
+    }
+}

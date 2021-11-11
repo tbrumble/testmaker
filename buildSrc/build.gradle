@@ -1,0 +1,8 @@
+repositories {
+    mavenCentral()
+}
+
+dependencies {
+    implementation 'org.freemarker:freemarker:2.3.31'
+    testCompileOnly 'org.freemarker:freemarker:2.3.31'
+}
