@@ -1,10 +1,7 @@
 package TemplateReader;
 
-
 import Model.TestTemplate;
-//import lombok.experimental.Accessors;
 
-//@Accessors(chain = true)
 public class TestTemplateReader {
     public TestTemplate getTestTemplate(String restPath,
                                         String switcherName,
