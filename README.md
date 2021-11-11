@@ -8,10 +8,10 @@ run gradle task -
 gradle accessTestTask --restPath="user/get-all" --switcherName="dbo_access_userverify" --testName="Example1GreatTest" --testPackageName="not ready"
 
 where:
-1 restPath - path to your rest methods 
-2 switcherName - kind of access switcher 
-3 testName - your wonderfull test name
-4 testPackageName - in what package do you want to save your generated test (not work now)
+ restPath - path to your rest method
+ switcherName - kind of access switcher 
+ testName - your wonderfull test name
+ testPackageName - in what package do you want to save your generated test (not work now)
 
 Where you can find switcher list - in src/main/resources/data.sql
 Application use PostgresDb - change it in application.properties
